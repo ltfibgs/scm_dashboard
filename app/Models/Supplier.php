@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Supplier extends Model
 {
-    protected $table = 'data_supplier';
+    // gunakan tabel eksisting (sesuai instruksi: jangan ganti struktur yang ada)
+    protected $table = 'supplier';
 
     protected $primaryKey = 'Supplier_ID';
     public $incrementing = false;
