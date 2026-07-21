@@ -15,32 +15,19 @@ return new class extends Migration
         }
 
         Schema::create('tabel_pengadaan_2025', function (Blueprint $table) {
-            $table->string('Pengadaan_ID', 50)->primary();
+            $table->bigIncrements('id');
 
-            // One-to-Many: supplier -> pengadaan
-            $table->string('Supplier_ID', 50);
-
-            // Item / nama barang
-            $table->string('Item_Nama', 100);
-
-            // Qty masuk
-            $table->integer('Qty_Masuk');
-
-            // Harga beli satuan
-            $table->decimal('Harga_Beli_Satuan', 12, 2);
-
-            // Total harga pengadaan
-            $table->decimal('Total_Harga_Pengadaan', 15, 2);
-
-            // Tanggal / waktu transaksi masuk
-            $table->dateTime('Tanggal_Waktu_Transaksi_Masuk');
+            // Kolom sesuai kebutuhan tampilan pengadaan
+            $table->integer('No')->unique();
+            $table->string('Bahan Baku', 255);
+            $table->integer('Jml Peramalan 2025')->nullable();
+            $table->string('Supplier Terpilih (WP)', 255);
+            $table->integer('Minimal Supplier')->nullable();
+            $table->integer('Stok Sisa 2024')->nullable();
+            $table->integer('Safety Stock Bahan')->nullable();
+            $table->integer('Jumlah Yg Harus Dibeli')->nullable();
 
             $table->timestamps();
-
-            $table->foreign('Supplier_ID')
-                ->references('Supplier_ID')
-                ->on('supplier')
-                ->onDelete('cascade');
         });
     }
 

@@ -1,106 +1,115 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full bg-gray-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shoes SCM - Dashboard & Sales Trend</title>
+    <!-- Tailwind CSS v4 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gray-100 font-sans antialiased text-gray-800">
+<body class="h-full font-sans antialiased text-gray-800 bg-gray-100">
 
     <div class="flex h-screen overflow-hidden">
-        <aside id="appSidebar" class="w-64 bg-gray-900 text-white flex flex-col justify-between transition-all duration-300">
-            <div class="p-5">
-                <div class="flex items-center justify-between gap-3">
-                    <h1 id="sidebarTitle" class="text-2xl font-bold tracking-wider text-indigo-400 transition-all duration-300">
-                        SHOES SCM
-                    </h1>
-                    <button id="sidebarToggle" type="button" aria-label="Toggle sidebar" class="text-white/90 hover:text-white p-2 rounded bg-gray-800 hover:bg-gray-700 transition duration-200">
-                        <!-- ikon burger -->
-                        <span class="block text-lg leading-none">&#9776;</span>
-                    </button>
+        
+        <!-- Sidebar Partials -->
+        @include('partials.sidebar', ['active' => 'dashboard'])
+
+        <!-- Main Content Wrapper -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+            
+            <!-- Top Header -->
+            <header class="bg-white shadow-xs px-6 py-4 flex justify-between items-center border-b border-gray-200 sticky top-0 z-20">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl font-bold text-gray-800 tracking-tight">Ringkasan Performa & Rantai Pasok</h2>
                 </div>
-
-                <nav class="mt-10 space-y-2">
-                    <!-- Dashboard -->
-                    <a href="{{ route('dashboard') }}" class="menu-link block py-2.5 px-4 rounded transition duration-200 bg-gray-800 text-white font-semibold">
-
-                        <span class="menu-icon">🏠</span>
-                        <span class="menu-text ml-3">Dashboard</span>
-                    </a>
-                    <!-- Manajemen Supplier -->
-                    <a href="{{ route('supplier.index') }}" class="menu-link block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 hover:text-white">
-                        <span class="menu-icon">🤝</span>
-                        <span class="menu-text ml-3">Manajemen Supplier</span>
-                    </a>
-
-                    <!-- Inventaris / Gudang -->
-                    <a href="{{ route('pengadaan.index') }}" class="menu-link block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 hover:text-white">
-                        <span class="menu-icon">📦</span>
-                        <span class="menu-text ml-3">Inventaris / Gudang</span>
-                    </a>
-
-                </nav>
-            </div>
-
-            <div class="p-4 border-t border-gray-800 text-sm text-gray-400">
-                <span id="sidebarFooterText" class="transition-opacity duration-200">v1.1 - Dashboard Update</span>
-            </div>
-        </aside>
-
-
-        <div class="flex-1 flex flex-col overflow-y-auto">
-            <header class="bg-white shadow-sm px-8 py-4 flex justify-between items-center">
-                <h2 class="text-xl font-semibold text-gray-800">Ringkasan Performa & Rantai Pasok</h2>
-                <span class="text-sm bg-indigo-100 text-indigo-800 font-medium px-3 py-1 rounded-full">
-                    Administrator
-                </span>
+                <div class="flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full text-xs font-semibold">
+                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <span>Administrator</span>
+                </div>
             </header>
 
-            <main class="p-8">
+            <!-- Main Content -->
+            <main class="p-6 md:p-8 space-y-8 max-w-7xl w-full mx-auto">
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Revenue</p>
-                        <h3 class="text-3xl font-bold text-gray-900 mt-2">
-                            Rp {{ number_format($totalRevenue, 0, ',', '.') }}
-                        </h3>
+                <!-- KPI Metric Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Revenue Card -->
+                    <div class="bg-white p-6 rounded-2xl shadow-xs border border-gray-200 flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Revenue</p>
+                            <h3 class="text-2xl lg:text-3xl font-extrabold text-gray-900 mt-2">
+                                Rp {{ number_format($totalRevenue, 0, ',', '.') }}
+                            </h3>
+                        </div>
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Units Sold</p>
-                        <h3 class="text-3xl font-bold text-gray-900 mt-2">
-                            {{ number_format($totalUnitsSold, 0, ',', '.') }} Pcs
-                        </h3>
+
+                    <!-- Units Sold Card -->
+                    <div class="bg-white p-6 rounded-2xl shadow-xs border border-gray-200 flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Units Sold</p>
+                            <h3 class="text-2xl lg:text-3xl font-extrabold text-gray-900 mt-2">
+                                {{ number_format($totalUnitsSold, 0, ',', '.') }} <span class="text-lg font-medium text-gray-500">Pcs</span>
+                            </h3>
+                        </div>
+                        <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Low Stock Alerts</p>
-                        <h3 class="text-3xl font-bold text-gray-900 mt-2 {{ $lowStockCount > 0 ? 'text-red-600' : 'text-gray-900' }}">
-                            {{ $lowStockCount }} Items
-                        </h3>
+
+                    <!-- Low Stock Alert Card -->
+                    <div class="bg-white p-6 rounded-2xl shadow-xs border border-gray-200 flex justify-between items-start">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Low Stock Alerts</p>
+                            <h3 class="text-2xl lg:text-3xl font-extrabold mt-2 {{ $lowStockCount > 0 ? 'text-rose-600' : 'text-gray-900' }}">
+                                {{ $lowStockCount }} <span class="text-lg font-medium text-gray-500">Items</span>
+                            </h3>
+                        </div>
+                        <div class="p-3 {{ $lowStockCount > 0 ? 'bg-rose-50 text-rose-600' : 'bg-gray-50 text-gray-400' }} rounded-xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
-                    <div class="flex justify-between items-center mb-4">
+                <!-- Sales Trend Line Chart -->
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-gray-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-800">Grafik Sales Trend</h3>
+                            <h3 class="text-lg font-bold text-gray-900">Grafik Sales Trend</h3>
                             <p class="text-sm text-gray-500">Visualisasi pertumbuhan pendapatan berkala dari transaksi penjualan sepatu</p>
                         </div>
-                        <span class="text-xs bg-green-100 text-green-800 px-2.5 py-1 rounded-full font-medium shadow-2xs">
-                            Database Connected
-                        </span>
+                        <div class="inline-flex items-center gap-1.5 self-start sm:self-auto bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>Database Connected</span>
+                        </div>
                     </div>
-                    <div class="relative w-full" style="height: 350px;">
+                    
+                    <div class="relative w-full h-80">
                         <canvas id="salesTrendChart"></canvas>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-                        <h4 class="font-semibold text-gray-800">Status Kontrol Inventaris</h4>
+                <!-- Inventory Control Table -->
+                <div class="bg-white rounded-2xl shadow-xs border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                        <h4 class="font-bold text-gray-800">Status Kontrol Inventaris</h4>
                         @if($lowStockCount > 0)
-                            <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium animate-pulse">
+                            <span class="inline-flex items-center gap-1 text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-semibold">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
                                 Butuh Restock Segera
                             </span>
                         @endif
@@ -109,23 +118,23 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider border-b border-gray-200">
-                                    <th class="py-3 px-6 font-semibold">No</th>
-                                    <th class="py-3 px-6 font-semibold">Nama Item / Bahan Baku</th>
-                                    <th class="py-3 px-6 font-semibold text-center">Stok Saat Ini</th>
-                                    <th class="py-3 px-6 font-semibold text-center">Batas Minimum</th>
-                                    <th class="py-3 px-6 font-semibold">Pemasok / Supplier</th>
-                                    <th class="py-3 px-6 font-semibold text-center">Status</th>
+                                <tr class="bg-gray-50 text-gray-500 uppercase text-[11px] font-bold tracking-wider border-b border-gray-200">
+                                    <th class="py-3.5 px-6">No</th>
+                                    <th class="py-3.5 px-6">Nama Item / Bahan Baku</th>
+                                    <th class="py-3.5 px-6 text-center">Stok Saat Ini</th>
+                                    <th class="py-3.5 px-6 text-center">Batas Minimum</th>
+                                    <th class="py-3.5 px-6">Pemasok / Supplier</th>
+                                    <th class="py-3.5 px-6 text-center">Status</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200 text-sm">
+                            <tbody class="divide-y divide-gray-100 text-sm">
                                 @forelse($materials as $index => $item)
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="py-4 px-6 font-medium text-gray-600">{{ $index + 1 }}</td>
+                                    <tr class="hover:bg-gray-50/80 transition-colors">
+                                        <td class="py-4 px-6 font-medium text-gray-500">{{ $index + 1 }}</td>
                                         <td class="py-4 px-6 font-semibold text-gray-900">
                                             {{ $item->nama_bahan ?? $item->Product_Name ?? 'Tidak Diketahui' }}
                                         </td>
-                                        <td class="py-4 px-6 text-center font-medium">
+                                        <td class="py-4 px-6 text-center font-bold text-gray-800">
                                             {{ $item->stok }}
                                         </td>
                                         <td class="py-4 px-6 text-center text-gray-500">
@@ -136,11 +145,11 @@
                                         </td>
                                         <td class="py-4 px-6 text-center">
                                             @if($item->stok <= $item->min_stok)
-                                                <span class="inline-flex px-2.5 py-1 text-xs font-semibold leading-5 text-red-800 bg-red-100 rounded-full">
+                                                <span class="inline-flex px-2.5 py-1 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-full">
                                                     Kritis
                                                 </span>
                                             @else
-                                                <span class="inline-flex px-2.5 py-1 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
+                                                <span class="inline-flex px-2.5 py-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full">
                                                     Aman
                                                 </span>
                                             @endif
@@ -148,7 +157,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="py-8 text-center text-gray-400 font-medium">
+                                        <td colspan="6" class="py-12 text-center text-gray-400 font-medium">
                                             Belum ada data rantai pasok yang tersedia.
                                         </td>
                                     </tr>
@@ -162,102 +171,79 @@
         </div>
     </div>
 
-    <style>
-        /* Sidebar collapsed: hanya ikon yang terlihat */
-        #appSidebar.collapsed { width: 4rem; }
-        #appSidebar.collapsed .menu-text { display: none; }
-        #appSidebar.collapsed #sidebarTitle { opacity: 0; width: 0; overflow: hidden; }
-        #appSidebar.collapsed #sidebarFooterText { opacity: 0; }
-        .menu-icon { font-size: 1.05rem; line-height: 1; }
-        /* Supaya padding tetap pas saat collapsed */
-        #appSidebar.collapsed .menu-link { padding-left: 1rem; padding-right: 1rem; text-align: center; }
-    </style>
-
+    <!-- Chart.js Logic -->
     <script>
-        const sidebar = document.getElementById('appSidebar');
-        const toggleBtn = document.getElementById('sidebarToggle');
+        document.addEventListener('DOMContentLoaded', () => {
+            const labelsData = {!! json_encode($chartLabels ?? []) !!};
+            const salesValues = {!! json_encode($chartValues ?? []) !!};
 
-        // default: expanded (bisa diganti localStorage kalau dibutuhkan)
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
-            // Ubah ikon burger jadi panah saat collapsed (opsional)
-            const isCollapsed = sidebar.classList.contains('collapsed');
-            toggleBtn.innerHTML = isCollapsed ? '<span class="block text-lg leading-none">&#187;</span>' : '<span class="block text-lg leading-none">&#9776;</span>';
-        });
+            const ctx = document.getElementById('salesTrendChart').getContext('2d');
+            
+            // Gradient area fill under chart
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.25)');
+            gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
 
-        // Membaca array dari Controller PHP ke struktur JSON JavaScript secara aman
-        const labelsData = {!! json_encode($chartLabels) !!};
-        const salesValues = {!! json_encode($chartValues) !!};
-
-
-        // Inisialisasi Chart.js Tipe Line Chart
-        const ctx = document.getElementById('salesTrendChart').getContext('2d');
-        const salesTrendChart = new Chart(ctx, {
-            type: 'line', 
-            data: {
-                labels: labelsData, // Data waktu/periode (Sumbu X)
-                datasets: [{
-                    label: 'Total Pendapatan (IDR)',
-                    data: salesValues, // Angka penjualan (Sumbu Y)
-                    borderColor: 'rgba(79, 70, 229, 1)', // Warna Garis Utama (Indigo)
-                    backgroundColor: 'rgba(79, 70, 229, 0.08)', // Warna Transparansi Area Bawah Garis
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.35, // Membuat lekukan tren tampak halus melengkung
-                    pointBackgroundColor: 'rgba(79, 70, 229, 1)',
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            boxWidth: 12,
-                            font: { size: 12, weight: 'bold' }
-                        }
-                    },
-                    tooltip: {
-                        padding: 12,
-                        backgroundColor: 'rgba(17, 24, 39, 0.9)',
-                        callbacks: {
-                            // Mengubah visualisasi angka teks melayang (tooltip) ke format Rupiah standar
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) { label += ': '; }
-                                if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat('id-ID', { 
+            new Chart(ctx, {
+                type: 'line', 
+                data: {
+                    labels: labelsData,
+                    datasets: [{
+                        label: 'Total Pendapatan (IDR)',
+                        data: salesValues,
+                        borderColor: '#4f46e5',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.35,
+                        pointBackgroundColor: '#4f46e5',
+                        pointHoverBackgroundColor: '#4338ca',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            padding: 12,
+                            backgroundColor: '#1e293b',
+                            titleFont: { size: 13 },
+                            bodyFont: { size: 13, weight: 'bold' },
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let value = context.parsed.y || 0;
+                                    return 'Pendapatan: ' + new Intl.NumberFormat('id-ID', { 
                                         style: 'currency', 
                                         currency: 'IDR', 
                                         maximumFractionDigits: 0 
-                                    }).format(context.parsed.y);
+                                    }).format(value);
                                 }
-                                return label;
                             }
                         }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#4b5563' }
                     },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: '#4b5563',
-                            // Mengubah label nilai angka vertikal (Sumbu Y) ke label Ringkas Rupiah
-                            callback: function(value) {
-                                return 'Rp ' + new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(value);
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#64748b', font: { size: 12 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: {
+                                color: '#64748b',
+                                font: { size: 12 },
+                                callback: function(value) {
+                                    return 'Rp ' + new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(value);
+                                }
                             }
                         }
                     }
                 }
-            }
+            });
         });
     </script>
 </body>

@@ -12,13 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penjualans', function (Blueprint $table) {
-            $table->string('Penjualan_ID', 50)->primary();
-            $table->string('Produksi_ID', 50); // Relasi ke batch produk
-            $table->string('Nama_Pelanggan', 150);
-            $table->integer('Qty_Jual');
-            $table->decimal('Harga_Satuan', 15, 2);
-            $table->decimal('Total_Bayar', 15, 2);
-            $table->enum('Status_Bayar', ['Lunas', 'Pending', 'Batal'])->default('Pending');
+            $table->id();
             $table->timestamps();
         });
     }
