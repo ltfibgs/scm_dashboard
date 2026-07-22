@@ -99,7 +99,17 @@
             </a>
         </nav>
     </div>
-
+    <div class="mt-auto p-4 border-gray-100">
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-rose-600  hover:bg-rose-100 rounded-xl transition-colors cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                <span>Keluar / Logout</span>
+            </button>
+        </form>
+    </div>
     <!-- Footer Sidebar -->
     <div class="p-4 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
         <span id="sidebarFooterText" class="transition-opacity duration-200 block truncate">v1.1 - Industrial Orange Edition</span>

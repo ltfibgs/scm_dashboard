@@ -246,7 +246,10 @@
                                         <span class="val-jarak">Hitung jarak...</span>
                                     </span>
                                 </div>
-                                <p class="text-on-surface-variant text-sm mt-0.5">{{ $p->Nama_Produk_Jadi ?? $p->Produksi_ID }} (Qty: {{ $p->Qty_Kirim }})</p>
+                                <!-- DIUBAH: Menampilkan Jenis Sepatu dan Order ID dari Relasi Penjualan -->
+                                <p class="text-on-surface-variant text-sm mt-0.5">
+                                    {{ $p->penjualan->Jenis_Sepatu ?? 'Order #' . $p->Order_ID }} (Qty: {{ $p->Qty_Kirim }})
+                                </p>
                             </div>
                         </div>
 
@@ -326,12 +329,15 @@
                 <input type="text" name="Pengiriman_ID" class="w-full rounded-lg border border-outline-variant px-3 py-2 text-sm focus:outline-none focus:border-primary" placeholder="Contoh: TRK-882910-ID" required>
             </div>
 
+            <!-- DIUBAH: Menggunakan Order ID dari Penjualan Sepatu -->
             <div>
-                <label class="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">Pilih Produk Jadi (Hasil Produksi)</label>
-                <select name="Produksi_ID" class="w-full rounded-lg border border-outline-variant px-3 py-2 text-sm focus:outline-none focus:border-primary" required>
-                    <option value="" disabled selected>-- Pilih Batch Produk Selesai --</option>
-                    @foreach($produksiSelesai as $prod)
-                        <option value="{{ $prod->Produksi_ID }}">{{ $prod->Nama_Produk_Jadi }} (ID: {{ $prod->Produksi_ID }})</option>
+                <label class="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">Pilih Order Penjualan Sepatu</label>
+                <select name="Order_ID" class="w-full rounded-lg border border-outline-variant px-3 py-2 text-sm focus:outline-none focus:border-primary" required>
+                    <option value="" disabled selected>-- Pilih Order Penjualan --</option>
+                    @foreach($penjualanSiapKirim as $penjualan)
+                        <option value="{{ $penjualan->Order_ID }}">
+                            Order #{{ $penjualan->Order_ID }} - {{ $penjualan->Jenis_Sepatu }} (Qty: {{ $penjualan->Jumlah_Terjual }})
+                        </option>
                     @endforeach
                 </select>
             </div>
