@@ -66,14 +66,14 @@
         }
     </script>
 </head>
-<body class="bg-background text-on-surface antialiased">
+<body class="bg-background text-on-surface ">
 
 <div class="flex min-h-screen">
     <!-- Sidebar Include -->
     @include('partials.sidebar', ['active' => 'pengadaan'])
 
     <!-- Main Content Area -->
-    <main class="flex-1 p-margin-mobile md:p-lg">
+    <main class="flex-1 p-margin-mobile md:p-lg md:ml-64">
         
         <!-- Flash Alert Message -->
         @if(session('success'))

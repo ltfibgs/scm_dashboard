@@ -8,7 +8,7 @@
     @include('partials.sidebar', ['active' => 'penjualan'])
 
     <!-- Main Content Canvas -->
-    <main class="flex-1 w-full min-h-screen p-4 md:p-6 pb-24 md:pb-6">
+    <main class="flex-1 w-full min-h-screen p-4 md:p-6 pb-24 md:pb-6 md:ml-64">
         
         <!-- Flash Alerts -->
         @if(session('success'))

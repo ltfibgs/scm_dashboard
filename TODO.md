@@ -1,11 +1,24 @@
-# TODO - Dashboard Real Data
+# TODO - Perbaikan Sidebar Overlap Konten
 
-## Perbaikan
-1. ✅ Grafik trend penjualan menggunakan data real untuk semua periode
-2. ✅ Tabel kontrol inventaris menampilkan produk jadi dari tabel_produksi
+## Status: ✅ SELESAI
 
-## Langkah
-- [x] **Step 1: Update DashboardController@index** - Data grafik harian/mingguan/bulanan/tahunan real & inventaris dari tabel_produksi
-- [x] **Step 2: Update dashboard.blade.php** - Chart.js pakai data real dari controller
-- [x] **Step 3: Test** - Semua perubahan selesai
+### Perubahan yang dilakukan:
+
+1. **Sidebar (`resources/views/partials/sidebar.blade.php`)**:
+   - `sticky top-0` → `fixed top-0 left-0`
+   - Sidebar sekarang tetap menempel saat halaman di-scroll
+
+2. **Semua halaman - tambah `md:ml-64`**:
+   - ✅ `resources/views/dashboard.blade.php`
+   - ✅ `resources/views/penjualan/index.blade.php`
+   - ✅ `resources/views/supplier/index.blade.php`
+   - ✅ `resources/views/pengadaan/index.blade.php`
+   - ✅ `resources/views/produksi/index.blade.php`
+   - ✅ `resources/views/pengiriman/index.blade.php`
+   - ✅ `resources/views/Gudang/index.blade.php`
+
+### Detail:
+- Sidebar menggunakan `position: fixed` sehingga tidak ikut ter-scroll
+- Konten utama mendapat `margin-left: 16rem` (Tailwind: `md:ml-64`) di layar medium ke atas
+- Di layar mobile, sidebar tetap tersembunyi seperti sebelumnya
 

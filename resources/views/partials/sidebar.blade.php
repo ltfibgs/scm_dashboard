@@ -1,4 +1,4 @@
-<aside id="appSidebar" class="sticky top-0 h-screen overflow-y-auto shrink-0 w-64 bg-slate-900 text-white flex flex-col justify-between transition-all duration-300 z-30 border-r border-slate-800">
+<aside id="appSidebar" class="fixed top-0 left-0 h-screen overflow-y-auto w-64 bg-slate-900 text-white flex flex-col justify-between transition-all duration-300 z-30 border-r border-slate-800">
     <div class="p-5">
         <!-- Header / Logo -->
         <div class="flex items-center justify-between ">

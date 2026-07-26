@@ -59,7 +59,7 @@
     @include('partials.sidebar', ['active' => 'supplier'])
 
     <!-- Main Content Area -->
-    <main class="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto w-full">
+    <main class="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto w-full md:ml-64">
         
         <!-- Alert Sukses -->
         @if(session('success'))

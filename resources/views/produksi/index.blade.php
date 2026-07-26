@@ -61,7 +61,7 @@
     @include('partials.sidebar', ['active' => 'produksi'])
 
     <!-- Main Content Area -->
-    <main class="flex-1 p-margin-mobile md:p-lg">
+    <main class="flex-1 p-margin-mobile md:p-lg md:ml-64">
         
         <!-- Flash Alert Messages -->
         @if(session('success'))

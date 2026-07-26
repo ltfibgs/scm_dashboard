@@ -112,7 +112,7 @@
     @include('partials.sidebar', ['active' => 'pengiriman'])
 
     <!-- Main Content Canvas -->
-    <main class="flex-1 p-margin-mobile md:p-lg">
+    <main class="flex-1 p-margin-mobile md:p-lg md:ml-64">
         
         <!-- Flash Message Alerts -->
         @if(session('success'))

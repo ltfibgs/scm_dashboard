@@ -60,8 +60,8 @@
     <!-- Sidebar Include -->
     @include('partials.sidebar', ['active' => 'dashboard'])
 
-    <!-- Main Content Area -->
-    <main class="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto w-full">
+<!-- Main Content Area -->
+    <main class="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto w-full md:ml-64">
         
         <!-- Top Executive Header Section -->
         <div class="mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm backdrop-blur-md">
