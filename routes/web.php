@@ -9,6 +9,7 @@ use App\Http\Controllers\GudangController;
 use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,9 +59,15 @@ Route::middleware(['auth.custom'])->group(function () {
     Route::post('/pengiriman', [PengirimanController::class, 'store'])->name('pengiriman.store');
     Route::patch('/pengiriman/{id}/status', [PengirimanController::class, 'updateStatus'])->name('pengiriman.updateStatus');
 
-    // Penjualan
+// Penjualan
     Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
     Route::post('/penjualan', [PenjualanController::class, 'store'])->name('penjualan.store');
     Route::patch('/penjualan/{id}/status', [PenjualanController::class, 'updateStatus'])->name('penjualan.updateStatus');
+
+    // Manajemen Pengguna
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
 });

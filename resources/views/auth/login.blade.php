@@ -16,8 +16,8 @@
          x-data="{ showPassword: false, loading: false }">
         
         <!-- Header Branding -->
-        <div class="bg-indigo-600 px-8 py-8 text-white text-center relative overflow-hidden">
-            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-500/30 rounded-full blur-xl"></div>
+        <div class="bg-orange-600 px-8 py-8 text-white text-center relative overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-orange-600/30 rounded-full blur-xl"></div>
             <div class="inline-flex p-3 bg-white/10 rounded-2xl backdrop-blur-md mb-3">
                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -91,7 +91,7 @@
                 <!-- Submit Button -->
                 <button type="submit" 
                         :disabled="loading"
-                        class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 disabled:opacity-70">
+                        class="w-full py-3 bg-orange-500 hover:bg-orange-700 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 disabled:opacity-70">
                     <span x-show="!loading">Masuk ke Dashboard</span>
                     <span x-show="loading" class="flex items-center gap-2" style="display: none;">
                         <svg class="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -104,10 +104,10 @@
             </form>
 
             <!-- Demo Credential Info Badge -->
-            <div class="bg-indigo-50/60 rounded-xl p-3 text-xs text-indigo-800 border border-indigo-100">
+            <div class="bg-indigo-50/60 rounded-xl p-3 text-xs text-orange-600 border border-indigo-100">
                 <p class="font-bold mb-1">Akun Demo Testing:</p>
-                <p>Email: <code class="bg-indigo-100 px-1 py-0.5 rounded text-indigo-900 font-mono">admin@shoesscm.com</code></p>
-                <p>Password: <code class="bg-indigo-100 px-1 py-0.5 rounded text-indigo-900 font-mono">password123</code></p>
+                <p>Email: <code class="bg-indigo-100 px-1 py-0.5 rounded text-orange-600 font-mono">admin@shoesscm.com</code></p>
+                <p>Password: <code class="bg-indigo-100 px-1 py-0.5 rounded text-orange-600 font-mono">password123</code></p>
             </div>
 
         </div>

@@ -1,24 +1,30 @@
-# TODO - Perbaikan Sidebar Overlap Konten
+# TODO - Progress Tracking
 
-## Status: ✅ SELESAI
+## ✅ SELESAI - Perbaikan Sidebar Overlap Konten
+- Sidebar: `sticky top-0` → `fixed top-0 left-0`
+- Semua halaman ditambahkan `md:ml-64`
 
-### Perubahan yang dilakukan:
+## ✅ SELESAI - Fitur Manajemen Pengguna
 
-1. **Sidebar (`resources/views/partials/sidebar.blade.php`)**:
-   - `sticky top-0` → `fixed top-0 left-0`
-   - Sidebar sekarang tetap menempel saat halaman di-scroll
+### File baru dibuat:
+1. **`app/Http/Controllers/UserController.php`** - Controller dengan method:
+   - `index()` - Tampilkan daftar pengguna
+   - `store()` - Tambah pengguna baru (name, email, password)
+   - `update()` - Edit pengguna (name, email, password opsional)
+   - `destroy()` - Hapus pengguna (tidak bisa hapus diri sendiri)
 
-2. **Semua halaman - tambah `md:ml-64`**:
-   - ✅ `resources/views/dashboard.blade.php`
-   - ✅ `resources/views/penjualan/index.blade.php`
-   - ✅ `resources/views/supplier/index.blade.php`
-   - ✅ `resources/views/pengadaan/index.blade.php`
-   - ✅ `resources/views/produksi/index.blade.php`
-   - ✅ `resources/views/pengiriman/index.blade.php`
-   - ✅ `resources/views/Gudang/index.blade.php`
+2. **`resources/views/users/index.blade.php`** - View halaman Manajemen Pengguna:
+   - Tabel daftar pengguna dengan avatar inisial
+   - Card statistik (Total, Aktif, Role)
+   - Modal Tambah Pengguna (name, email, password, confirm password)
+   - Modal Edit Pengguna (name, email, password opsional)
+   - Tombol hapus dengan konfirmasi
+   - Proteksi hapus diri sendiri
 
-### Detail:
-- Sidebar menggunakan `position: fixed` sehingga tidak ikut ter-scroll
-- Konten utama mendapat `margin-left: 16rem` (Tailwind: `md:ml-64`) di layar medium ke atas
-- Di layar mobile, sidebar tetap tersembunyi seperti sebelumnya
+### File diedit:
+3. **`routes/web.php`** - Menambahkan:
+   - `use App\Http\Controllers\UserController;`
+   - Route: `/users` (GET), POST, PUT, DELETE
+
+4. **`resources/views/partials/sidebar.blade.php`** - Menambahkan menu "Manajemen Pengguna" dengan icon SVG dan active state
 
