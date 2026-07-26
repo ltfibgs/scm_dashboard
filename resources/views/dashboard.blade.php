@@ -70,7 +70,7 @@
         <div class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-md border-b border-outline-variant/40 pb-md">
             <div>
                 <div class="flex items-center gap-2 mb-1">
-                    <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-900 text-xs font-bold uppercase tracking-wider">Executive Overview</span>
+                    <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-orange-600 text-xs font-bold uppercase tracking-wider">Executive Overview</span>
                 </div>
                 <h2 class="text-3xl font-bold text-primary">Ringkasan Performa & Rantai Pasok</h2>
                 <p class="text-on-surface-variant text-sm mt-1">Pantau tren pendapatan, penjualan unit, dan kontrol stok bahan baku secara real-time.</p>
@@ -78,7 +78,7 @@
 
             <div class="flex items-center gap-3 self-start md:self-auto">
                 <div class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/50 px-3.5 py-2 rounded-xl shadow-sm text-xs font-semibold text-primary">
-                    <span class="material-symbols-outlined text-indigo-600 text-[18px]">admin_panel_settings</span>
+                    <span class="material-symbols-outlined text-orange-600 text-[18px]">admin_panel_settings</span>
                     <span>Administrator</span>
                 </div>
             </div>
@@ -110,12 +110,12 @@
                     <h3 class="text-2xl lg:text-3xl font-extrabold text-primary mt-2">
                         {{ number_format($totalUnitsSold ?? 0, 0, ',', '.') }} <span class="text-sm font-normal text-on-surface-variant">Pcs</span>
                     </h3>
-                    <p class="text-xs text-indigo-600 font-medium mt-2 flex items-center gap-1">
+                    <p class="text-xs text-orange-600 font-medium mt-2 flex items-center gap-1">
                         <span class="material-symbols-outlined text-[16px]">shopping_bag</span>
                         Volume Penjualan
                     </p>
                 </div>
-                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-orange-600 flex items-center justify-center shrink-0">
                     <span class="material-symbols-outlined text-[28px]">inventory_2</span>
                 </div>
             </div>
@@ -150,7 +150,7 @@
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-lg">
                 <div>
                     <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-indigo-600">show_chart</span>
+                        <span class="material-symbols-outlined text-orange-600">show_chart</span>
                         <h3 class="text-lg font-bold text-primary">Grafik Tren Penjualan</h3>
                     </div>
                     <p class="text-xs text-on-surface-variant mt-0.5">Visualisasi pertumbuhan pendapatan dari transaksi produk sepatu secara berkala.</p>
@@ -158,7 +158,7 @@
                 
                 <!-- Filter Periode (Harian, Mingguan, Bulanan, Tahunan) -->
                 <div class="flex items-center gap-2 bg-surface-container p-1 rounded-xl border border-outline-variant/40 self-start lg:self-auto">
-                    <button onclick="updateChartFilter('daily')" id="btn-daily" class="filter-btn text-xs font-bold px-3 py-1.5 rounded-lg transition-all cursor-pointer bg-white text-indigo-600 shadow-sm">
+                    <button onclick="updateChartFilter('daily')" id="btn-daily" class="filter-btn text-xs font-bold px-3 py-1.5 rounded-lg transition-all cursor-pointer bg-white text-orange-600 shadow-sm">
                         Harian
                     </button>
                     <button onclick="updateChartFilter('weekly')" id="btn-weekly" class="filter-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all cursor-pointer text-on-surface-variant hover:text-primary">
@@ -368,14 +368,14 @@
         // Update Tampilan Tombol Active / Inactive
         const buttons = document.querySelectorAll('.filter-btn');
         buttons.forEach(btn => {
-            btn.classList.remove('bg-white', 'text-indigo-600', 'shadow-sm', 'font-bold');
+            btn.classList.remove('bg-white', 'text-orange-600', 'shadow-sm', 'font-bold');
             btn.classList.add('text-on-surface-variant', 'font-medium');
         });
 
         const activeBtn = document.getElementById(`btn-${period}`);
         if (activeBtn) {
             activeBtn.classList.remove('text-on-surface-variant', 'font-medium');
-            activeBtn.classList.add('bg-white', 'text-indigo-600', 'shadow-sm', 'font-bold');
+            activeBtn.classList.add('bg-white', 'text-orange-600', 'shadow-sm', 'font-bold');
         }
     }
 </script>

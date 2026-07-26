@@ -70,7 +70,8 @@ class ProduksiController extends Controller
             ->where('Produksi_ID', $id)
             ->update([
                 'Qty_Hasil_Jadi' => $data['Qty_Hasil_Jadi'],
-                'Status' => 'Completed'
+                'Stok_Tersedia'  => $data['Qty_Hasil_Jadi'],
+                'Status'         => 'Completed'
             ]);
 
         return redirect()->route('produksi.index')->with('success', 'Batch produksi berhasil diselesaikan!');

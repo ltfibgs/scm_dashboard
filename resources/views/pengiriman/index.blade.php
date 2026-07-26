@@ -334,9 +334,11 @@
                 <label class="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">Pilih Order Penjualan Sepatu</label>
                 <select name="Order_ID" class="w-full rounded-lg border border-outline-variant px-3 py-2 text-sm focus:outline-none focus:border-primary" required>
                     <option value="" disabled selected>-- Pilih Order Penjualan --</option>
-                    @foreach($penjualanSiapKirim as $penjualan)
+                    
+                    {{-- Mengurutkan koleksi berdasarkan kolom Timestamp dari yang terbaru --}}
+                    @foreach($penjualanSiapKirim->sortByDesc('Timestamp') as $penjualan)
                         <option value="{{ $penjualan->Order_ID }}">
-                            Order #{{ $penjualan->Order_ID }} - {{ $penjualan->Jenis_Sepatu }} (Qty: {{ $penjualan->Jumlah_Terjual }})
+                            Order #{{ $penjualan->Order_ID }} - {{ $penjualan->Product_Name ?? $penjualan->Jenis_Sepatu }} (Qty: {{ $penjualan->Qty ?? $penjualan->Jumlah_Terjual }})
                         </option>
                     @endforeach
                 </select>

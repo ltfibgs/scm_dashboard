@@ -2,69 +2,131 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Penjualan;
-use App\Models\Produksi; // Sesuaikan dengan model stok/produksi kamu jika ada
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use App\Models\Penjualan;
+use Carbon\Carbon;
 
 class PenjualanController extends Controller
 {
-    /**
-     * Tampilkan Halaman Utama & Daftar Penjualan
-     */
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil daftar penjualan terbaru dengan pagination
-        $penjualan = Penjualan::orderBy('Timestamp', 'desc')->paginate(10);
+        $query = Penjualan::query();
 
-        // Ambil data produk yang sudah selesai diproduksi / siap dijual untuk dropdown modal
-        // Jika belum ada model Produksi, variabel ini bisa diisi array static atau query yang sesuai
-        $produkSelesai = class_exists(Produksi::class) 
-            ? Produksi::all() 
-            : collect([]);
+        // 1. Filter Tab (Hari Ini vs Historis)
+        if ($request->filter === 'today') {
+            $query->whereDate('Timestamp', Carbon::today());
+        } elseif ($request->filter === 'history') {
+            $query->whereDate('Timestamp', '<', Carbon::today());
+        }
+
+        // 2. Pencarian (Search Bar)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('Order_ID', 'LIKE', "%{$search}%")
+                  ->orWhere('Product_Name', 'LIKE', "%{$search}%")
+                  ->orWhere('Category', 'LIKE', "%{$search}%")
+                  ->orWhere('Payment_Method', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // 3. Pengurutan Data (Urutan Paling Baru di Atas)
+        $penjualan = $query->orderBy('Timestamp', 'desc')
+                           ->orderBy('Order_ID', 'desc')
+                           ->paginate(10)
+                           ->withQueryString();
+
+        // 4. Ambil Daftar Produk Selesai dari DB (yang masih punya stok)
+        $produkSelesai = DB::table('tabel_produksi')
+            ->whereIn('Status', ['Completed', 'Selesai'])
+            ->where('Stok_Tersedia', '>', 0)
+            ->get();
 
         return view('penjualan.index', compact('penjualan', 'produkSelesai'));
     }
 
-    /**
-     * Simpan Transaksi Penjualan Baru
-     */
     public function store(Request $request)
     {
         // 1. Validasi Input
-        $validated = $request->validate([
-            'Product_Name'   => 'required|string|max:255',
-            'Category'       => 'required|string|max:100',
-            'Qty'            => 'required|integer|min:1',
+        $request->validate([
+            'Produksi_ID'    => 'required|string|max:50',
+            'Product_Name'   => 'required|string|max:100',
+            'Category'       => 'required|string|max:50',
+            'Qty'            => 'required|numeric|min:1',
             'Unit_Price'     => 'required|numeric|min:0',
-            'Payment_Method' => 'required|string|in:CASH,QRIS,TRANSFER',
+            'Payment_Method' => 'required|string',
         ], [
-            'Product_Name.required'   => 'Pilih atau isi nama produk terlebih dahulu.',
-            'Category.required'       => 'Kategori produk wajib diisi.',
-            'Qty.required'            => 'Jumlah produk (Qty) wajib diisi.',
-            'Qty.min'                 => 'Minimal pembelian adalah 1.',
-            'Unit_Price.required'     => 'Harga satuan wajib diisi.',
-            'Payment_Method.required' => 'Pilih metode pembayaran.',
+            'Produksi_ID.required' => 'Pilih produk terlebih dahulu.',
         ]);
 
-        // 2. Generate Order ID unik (Format: ORD-YYYYMMDD-XXXX)
-        $orderId = 'ORD-' . date('Ymd') . '-' . strtoupper(Str::random(4));
+        // 2. Cek stok tersedia
+        $produk = DB::table('tabel_produksi')
+            ->where('Produksi_ID', $request->Produksi_ID)
+            ->whereIn('Status', ['Completed', 'Selesai'])
+            ->first();
 
-        // 3. Hitung Total Harga
-        $totalPrice = $validated['Qty'] * $validated['Unit_Price'];
+        if (!$produk) {
+            return redirect()->back()->with('error', 'Produk tidak ditemukan atau belum selesai diproduksi.');
+        }
 
-        // 4. Simpan ke Database
-        Penjualan::create([
-            'Order_ID'       => $orderId,
-            'Timestamp'      => now(),
-            'Product_Name'   => $validated['Product_Name'],
-            'Category'       => $validated['Category'],
-            'Qty'            => $validated['Qty'],
-            'Unit_Price'     => $validated['Unit_Price'],
-            'Total_Price'    => $totalPrice,
-            'Payment_Method' => $validated['Payment_Method'],
-        ]);
+        if ($produk->Stok_Tersedia < $request->Qty) {
+            return redirect()->back()->with('error', 'Stok produk tidak mencukupi! Tersisa: ' . $produk->Stok_Tersedia . ' unit.');
+        }
 
-        return redirect()->back()->with('success', 'Transaksi penjualan berhasil disimpan! Order ID: ' . $orderId);
+        // 3. Transaksi DB & Locking
+        $autoOrderId = DB::transaction(function () use ($request) {
+            $todayDate = date('Ymd');
+            $prefix = "ORD-{$todayDate}-";
+
+            $lastOrder = Penjualan::where('Order_ID', 'LIKE', "{$prefix}%")
+                ->orderBy('Order_ID', 'desc')
+                ->lockForUpdate()
+                ->first();
+
+            if ($lastOrder) {
+                $lastNumber = (int) substr($lastOrder->Order_ID, -4);
+                $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+            } else {
+                $nextNumber = '4001';
+            }
+
+            $orderId = $prefix . $nextNumber;
+            $totalPrice = $request->Qty * $request->Unit_Price;
+
+            // Simpan Data Penjualan
+            Penjualan::create([
+                'Order_ID'       => $orderId,
+                'Timestamp'      => now(),
+                'Product_Name'   => $request->Product_Name,
+                'Category'       => $request->Category,
+                'Qty'            => $request->Qty,
+                'Unit_Price'     => $request->Unit_Price,
+                'Total_Price'    => $totalPrice,
+                'Payment_Method' => $request->Payment_Method,
+            ]);
+
+            // Kurangi stok produk jadi
+            DB::table('tabel_produksi')
+                ->where('Produksi_ID', $request->Produksi_ID)
+                ->decrement('Stok_Tersedia', $request->Qty);
+
+            return $orderId;
+        });
+
+        return redirect()->route('penjualan.index')
+            ->with('success', "Transaksi berhasil dibuat secara otomatis dengan ID: {$autoOrderId}")
+            ->with('new_order_id', $autoOrderId);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $penjualan = Penjualan::where('Order_ID', $id)->firstOrFail();
+
+        if ($request->has('Payment_Method')) {
+            $penjualan->update(['Payment_Method' => $request->Payment_Method]);
+        }
+
+        return redirect()->back()->with('success', 'Data penjualan berhasil diperbarui!');
     }
 }

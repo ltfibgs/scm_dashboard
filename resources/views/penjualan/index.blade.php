@@ -250,12 +250,17 @@
                     <option value="" disabled selected>-- Pilih Produk dari Stok --</option>
                     @foreach($produkSelesai as $prod)
                         <option value="{{ $prod->Produksi_ID }}" 
+                                data-nama="{{ $prod->Nama_Produk_Jadi ?? $prod->nama_produk ?? $prod->Produksi_ID }}"
                                 data-kategori="{{ $prod->kategori ?? 'Sepatu' }}" 
                                 data-harga="{{ $prod->harga_jual ?? 150000 }}">
-                            {{ $prod->Nama_Produk_Jadi ?? $prod->nama_produk ?? $prod->Produksi_ID }}
+                            {{ $prod->Nama_Produk_Jadi ?? $prod->nama_produk ?? $prod->Produksi_ID }} (Stok: {{ $prod->Stok_Tersedia ?? 0 }})
                         </option>
                     @endforeach
                 </select>
+                <!-- Hidden inputs untuk dikirim ke controller -->
+                <input type="hidden" name="Produksi_ID" x-model="selectedProdukId">
+                <input type="hidden" name="Product_Name" x-model="namaProduk">
+                <input type="hidden" name="Category" x-model="kategori">
             </div>
 
             <!-- Kategori Auto-Filled -->
@@ -268,11 +273,11 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold text-[#091426] mb-1 uppercase tracking-wider">Jumlah (Qty)</label>
-                    <input type="number" name="qty" x-model.number="qty" min="1" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#091426]" placeholder="1" required>
+                    <input type="number" name="Qty" x-model.number="qty" min="1" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#091426]" placeholder="1" required>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-[#091426] mb-1 uppercase tracking-wider">Harga Satuan (Rp)</label>
-                    <input type="number" name="harga_satuan" x-model.number="hargaSatuan" min="0" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#091426]" placeholder="150000" required>
+                    <input type="number" name="Unit_Price" x-model.number="hargaSatuan" min="0" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#091426]" placeholder="150000" required>
                 </div>
             </div>
 
@@ -285,7 +290,7 @@
             <!-- Metode Pembayaran -->
             <div>
                 <label class="block text-xs font-bold text-[#091426] mb-1 uppercase tracking-wider">Metode Pembayaran</label>
-                <select name="payment_method" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#091426]" required>
+                <select name="Payment_Method" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#091426]" required>
                     <option value="CASH">CASH</option>
                     <option value="QRIS">QRIS</option>
                     <option value="TRANSFER">TRANSFER</option>
@@ -310,6 +315,7 @@
     function penjualanForm() {
         return {
             selectedProdukId: '',
+            namaProduk: '',
             kategori: '',
             qty: 1,
             hargaSatuan: 0,
@@ -321,6 +327,7 @@
             updateProdukInfo() {
                 const selectEl = event.target;
                 const selectedOption = selectEl.options[selectEl.selectedIndex];
+                this.namaProduk = selectedOption.getAttribute('data-nama') || '';
                 this.kategori = selectedOption.getAttribute('data-kategori') || 'Sepatu';
                 this.hargaSatuan = parseFloat(selectedOption.getAttribute('data-harga')) || 0;
             },
