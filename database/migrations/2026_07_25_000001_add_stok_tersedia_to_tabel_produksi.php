@@ -20,9 +20,7 @@ return new class extends Migration
         DB::statement("UPDATE tabel_produksi SET Stok_Tersedia = Qty_Hasil_Jadi WHERE Status = 'Completed' AND Qty_Hasil_Jadi IS NOT NULL");
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::table('tabel_produksi', function (Blueprint $table) {

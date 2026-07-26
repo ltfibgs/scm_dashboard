@@ -86,12 +86,11 @@
         <!-- Header Section -->
         <div class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-md">
             <div>
-                
                 <h2 class="text-3xl font-bold text-primary">Pengadaan Bahan Baku</h2>
                 <p class="text-on-surface-variant text-sm mt-1">Kelola kebutuhan barang masuk dan alokasi pemasok terpilih secara efisien.</p>
             </div>
             
-            <button onclick="document.getElementById('modalTambahPengadaan').showModal()" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-all shadow-md hover:shadow-indigo-200 active:scale-95 cursor-pointer">
+            <button onclick="document.getElementById('modalTambahPengadaan').showModal()" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-orange-600 text-white rounded-xl font-semibold hover:bg-orange-700 transition-all shadow-md hover:shadow-orange-200 active:scale-95 cursor-pointer">
                 <span class="material-symbols-outlined text-[20px]">add_circle</span>
                 Tambah Pengadaan Baru
             </button>
@@ -100,7 +99,7 @@
         <!-- Metric Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-md mb-xl">
             <div class="bg-surface-container-lowest p-md rounded-2xl shadow-sm border border-outline-variant/50 flex items-center gap-md">
-                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0">
                     <span class="material-symbols-outlined text-[28px]">inventory_2</span>
                 </div>
                 <div>
@@ -171,7 +170,7 @@
                                 </td>
                                 <td class="py-4 px-lg font-semibold text-primary">
                                     <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                                        <span class="w-2 h-2 rounded-full bg-orange-500"></span>
                                         {{ $pItem }}
                                     </div>
                                 </td>
@@ -181,61 +180,20 @@
                                         {{ $pSupId }}
                                     </span>
                                 </td>
-                                <td class="py-4 px-lg text-right font-bold text-indigo-900">
+                                <td class="py-4 px-lg text-right font-bold text-orange-950">
                                     {{ number_format($pQty, 0, ',', '.') }} <span class="text-xs font-normal text-on-surface-variant">Unit</span>
                                 </td>
                                 <td class="py-4 px-lg text-center">
                                     <div class="flex items-center justify-center gap-sm">
                                         
-                                        <!-- Edit Popover Button & Panel -->
-                                        <details class="relative group/popover">
-                                            <summary class="list-none cursor-pointer p-1.5 rounded-lg text-indigo-600 hover:bg-indigo-50 transition-colors inline-flex items-center justify-center" title="Edit Data">
-                                                <span class="material-symbols-outlined text-[20px]">edit_square</span>
-                                            </summary>
-                                            
-                                            <div class="mt-2 text-left bg-white border border-outline-variant/60 rounded-2xl p-4 absolute right-0 z-30 shadow-xl w-72 backdrop-blur-sm">
-                                                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
-                                                    <h4 class="font-bold text-xs text-primary uppercase tracking-wider">Edit Pengadaan #{{ $pId }}</h4>
-                                                </div>
-                                                
-                                                <form method="POST" action="{{ route('pengadaan.update', $pId) }}" class="space-y-3">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    
-                                                    <div>
-                                                        <label class="block text-[11px] font-bold text-primary mb-1 uppercase">Supplier</label>
-                                                        <select name="Supplier_ID" class="w-full rounded-lg border border-outline-variant px-2.5 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none" required>
-                                                            @foreach($suppliers as $sp)
-                                                                @php 
-                                                                    $spIdLoop = $sp->Supplier_ID ?? $sp->supplier_id ?? $sp->id ?? ''; 
-                                                                    $spNameLoop = $sp->Supplier_Name ?? $sp->supplier_name ?? $sp->nama ?? $spIdLoop;
-                                                                @endphp
-                                                                <option value="{{ $spIdLoop }}" {{ $spIdLoop === $pSupId ? 'selected' : '' }}>
-                                                                    {{ $spIdLoop }} - {{ $spNameLoop }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-                                                    <div>
-                                                        <label class="block text-[11px] font-bold text-primary mb-1 uppercase">Nama Bahan Baku</label>
-                                                        <input type="text" name="Item_Nama" value="{{ $pItem }}" class="w-full rounded-lg border border-outline-variant px-2.5 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none" required>
-                                                    </div>
-
-                                                    <div>
-                                                        <label class="block text-[11px] font-bold text-primary mb-1 uppercase">Jumlah Dibeli</label>
-                                                        <input type="number" name="Qty_Masuk" value="{{ $pQty }}" class="w-full rounded-lg border border-outline-variant px-2.5 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none" required>
-                                                    </div>
-
-                                                    <input type="hidden" name="Harga_Beli_Satuan" value="0">
-                                                    <input type="hidden" name="Tanggal_Waktu_Transaksi_Masuk" value="{{ now()->format('Y-m-d\TH:i') }}">
-
-                                                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 rounded-lg transition-colors cursor-pointer mt-1 shadow-sm">
-                                                        Simpan Perubahan
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </details>
+                                        <!-- Edit Button (Pemicu Modal JS) -->
+                                        <button 
+                                            type="button" 
+                                            onclick="openEditModal('{{ $pId }}', '{{ $pSupId }}', '{{ addslashes($pItem) }}', '{{ $pQty }}')"
+                                            class="p-1.5 rounded-lg text-orange-600 hover:bg-orange-50 transition-colors inline-flex items-center justify-center cursor-pointer" 
+                                            title="Edit Data">
+                                            <span class="material-symbols-outlined text-[20px]">edit_square</span>
+                                        </button>
 
                                         <!-- Hapus Button -->
                                         <form method="POST" action="{{ route('pengadaan.destroy', $pId) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data pengadaan ini?')" class="inline-block">
@@ -272,7 +230,7 @@
     <div class="bg-surface-container-lowest p-lg">
         <div class="flex justify-between items-center mb-md border-b border-outline-variant/40 pb-sm">
             <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-indigo-600">add_box</span>
+                <span class="material-symbols-outlined text-orange-600">add_box</span>
                 <h3 class="text-lg font-bold text-primary">Tambah Data Pengadaan</h3>
             </div>
             <button onclick="document.getElementById('modalTambahPengadaan').close()" class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
@@ -285,12 +243,12 @@
 
             <div>
                 <label class="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">No / ID Pengadaan (Angka)</label>
-                <input type="number" name="Pengadaan_ID" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none" placeholder="Contoh: 15" required>
+                <input type="number" name="Pengadaan_ID" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500/20 focus:border-orange-600 outline-none" placeholder="Contoh: 15" required>
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">Supplier Terpilih</label>
-                <select name="Supplier_ID" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none" required>
+                <select name="Supplier_ID" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500/20 focus:border-orange-600 outline-none" required>
                     <option value="" disabled selected>-- Pilih Supplier --</option>
                     @foreach($suppliers as $sp)
                         @php 
@@ -304,12 +262,12 @@
 
             <div>
                 <label class="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">Bahan Baku / Nama Barang</label>
-                <input type="text" name="Item_Nama" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none" placeholder="Contoh: Kulit Sapi Premium" required>
+                <input type="text" name="Item_Nama" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500/20 focus:border-orange-600 outline-none" placeholder="Contoh: Kulit Sapi Premium" required>
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">Jumlah Dibeli (Qty)</label>
-                <input type="number" name="Qty_Masuk" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 outline-none" placeholder="Contoh: 500" required>
+                <input type="number" name="Qty_Masuk" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500/20 focus:border-orange-600 outline-none" placeholder="Contoh: 500" required>
             </div>
 
             <input type="hidden" name="Harga_Beli_Satuan" value="0">
@@ -319,13 +277,86 @@
                 <button type="button" onclick="document.getElementById('modalTambahPengadaan').close()" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant font-semibold text-sm hover:bg-surface-container-high transition-colors cursor-pointer">
                     Batal
                 </button>
-                <button type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-md cursor-pointer">
+                <button type="submit" class="px-5 py-2 rounded-xl bg-orange-600 text-white font-semibold text-sm hover:bg-orange-700 transition-colors shadow-md cursor-pointer">
                     Simpan Data
                 </button>
             </div>
         </form>
     </div>
 </dialog>
+
+<!-- Modal Edit Pengadaan (Single Modal di Luar Tabel) -->
+<dialog id="modalEditPengadaan" class="rounded-2xl shadow-2xl border border-outline-variant/60 p-0 w-full max-w-md backdrop:bg-black/50 backdrop:backdrop-blur-sm">
+    <div class="bg-surface-container-lowest p-lg">
+        <div class="flex justify-between items-center mb-md border-b border-outline-variant/40 pb-sm">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-orange-600">edit_square</span>
+                <h3 class="text-lg font-bold text-primary">Edit Data Pengadaan <span id="editTitleId" class="text-orange-600"></span></h3>
+            </div>
+            <button onclick="document.getElementById('modalEditPengadaan').close()" class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form id="formEditPengadaan" method="POST" action="" class="space-y-4">
+            @csrf
+            @method('PUT')
+
+            <div>
+                <label class="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">Supplier Terpilih</label>
+                <select id="editSupplierId" name="Supplier_ID" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500/20 focus:border-orange-600 outline-none" required>
+                    @foreach($suppliers as $sp)
+                        @php 
+                            $spIdLoop = $sp->Supplier_ID ?? $sp->supplier_id ?? $sp->id ?? ''; 
+                            $spNameLoop = $sp->Supplier_Name ?? $sp->supplier_name ?? $sp->nama ?? $spIdLoop;
+                        @endphp
+                        <option value="{{ $spIdLoop }}">{{ $spIdLoop }} - {{ $spNameLoop }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">Bahan Baku / Nama Barang</label>
+                <input type="text" id="editItemNama" name="Item_Nama" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500/20 focus:border-orange-600 outline-none" required>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-primary mb-1 uppercase tracking-wider">Jumlah Dibeli (Qty)</label>
+                <input type="number" id="editQtyMasuk" name="Qty_Masuk" class="w-full rounded-xl border border-outline-variant px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500/20 focus:border-orange-600 outline-none" required>
+            </div>
+
+            <input type="hidden" name="Harga_Beli_Satuan" value="0">
+            <input type="hidden" name="Tanggal_Waktu_Transaksi_Masuk" value="{{ now()->format('Y-m-d\TH:i') }}">
+
+            <div class="pt-md flex justify-end gap-2 border-t border-outline-variant/40 mt-md">
+                <button type="button" onclick="document.getElementById('modalEditPengadaan').close()" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface-variant font-semibold text-sm hover:bg-surface-container-high transition-colors cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" class="px-5 py-2 rounded-xl bg-orange-600 text-white font-semibold text-sm hover:bg-orange-700 transition-colors shadow-md cursor-pointer">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<!-- JavaScript Handler untuk Modal Edit -->
+<script>
+    function openEditModal(id, supplierId, itemNama, qty) {
+        // Set Action URL Form Laravel secara dinamis
+        const form = document.getElementById('formEditPengadaan');
+        form.action = `/pengadaan/${id}`; // Sesuaikan dengan route update kamu
+
+        // Set Title & Field Input
+        document.getElementById('editTitleId').textContent = `#${id}`;
+        document.getElementById('editSupplierId').value = supplierId;
+        document.getElementById('editItemNama').value = itemNama;
+        document.getElementById('editQtyMasuk').value = qty;
+
+        // Buka Modal Dialog
+        document.getElementById('modalEditPengadaan').showModal();
+    }
+</script>
 
 </body>
 </html>
