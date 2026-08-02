@@ -1,4 +1,4 @@
-<aside id="appSidebar" class="fixed top-0 left-0 h-screen overflow-y-auto w-64 bg-slate-900 text-white flex flex-col justify-between transition-all duration-300 z-30 border-r border-slate-800">
+<aside id="appSidebar" class="fixed top-0 left-0 h-screen overflow-y-auto overflow-x-hidden w-64 bg-slate-900 text-white flex flex-col justify-between transition-all duration-300 z-30 border-r border-slate-800">
     <div class="p-5">
         <!-- Header / Logo -->
         <div class="flex items-center justify-between ">
@@ -76,6 +76,18 @@
                 <span class="menu-text ml-3 text-sm">Produksi</span>
             </a>
 
+            
+            <!-- Penjualan -->
+            <a href="{{ route('penjualan.index') }}" 
+               class="menu-link flex items-center py-2.5 px-4 rounded-xl transition duration-200 {{ ($active ?? '') === 'penjualan' ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg shadow-orange-500/25' : 'hover:bg-slate-800/80 hover:text-orange-400 text-slate-300' }}">
+                <span class="menu-icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </span>
+                <span class="menu-text ml-3 text-sm">Penjualan</span>
+            </a>
+            
             <!-- Pengiriman -->
             <a href="{{ route('pengiriman.index') }}"
                class="menu-link flex items-center py-2.5 px-4 rounded-xl transition duration-200 {{ ($active ?? '') === 'pengiriman' ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg shadow-orange-500/25' : 'hover:bg-slate-800/80 hover:text-orange-400 text-slate-300' }}">
@@ -87,16 +99,6 @@
                 <span class="menu-text ml-3 text-sm">Pengiriman</span>
             </a>
 
-            <!-- Penjualan -->
-            <a href="{{ route('penjualan.index') }}" 
-               class="menu-link flex items-center py-2.5 px-4 rounded-xl transition duration-200 {{ ($active ?? '') === 'penjualan' ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg shadow-orange-500/25' : 'hover:bg-slate-800/80 hover:text-orange-400 text-slate-300' }}">
-                <span class="menu-icon">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                </span>
-                <span class="menu-text ml-3 text-sm">Penjualan</span>
-            </a>
 
             <!-- Manajemen Pengguna -->
             <a href="{{ route('users.index') }}" 
@@ -114,10 +116,10 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-rose-600  hover:bg-rose-100 rounded-xl transition-colors cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                 </svg>
-                <span>Keluar / Logout</span>
+                <span class="logout-text">Keluar / Logout</span>
             </button>
         </form>
     </div>
@@ -149,6 +151,26 @@
         padding-right: 0rem; 
         justify-content: center; 
     }
+
+    #appSidebar.collapsed .logout-text { display: none; }
+    #appSidebar.collapsed form button { justify-content: center; padding-left: 0; padding-right: 0; }
+    #appSidebar.collapsed .mt-auto form { text-align: center; }
+
+    /* Rapikan header saat collapsed agar tidak meluber */
+    #appSidebar.collapsed #sidebarTitle { display: none; }
+    #appSidebar.collapsed .p-5 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    #appSidebar.collapsed .p-5 > div:first-child { justify-content: center; }
+
+    /* Agar konten utama mengikuti lebar sidebar saat collapsed/expanded */
+    main {
+        transition: margin-left .3s ease;
+    }
+
+    @media (min-width: 768px) {
+        body.sidebar-collapsed main {
+            margin-left: 4.5rem;
+        }
+    }
 </style>
 
 <script>
@@ -160,9 +182,11 @@
         if (!sidebar || !toggleBtn) return;
 
         toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
-            const isCollapsed = sidebar.classList.contains('collapsed');
-            
+            const isCollapsed = sidebar.classList.toggle('collapsed');
+
+            // Sinkronkan body agar margin konten utama mengikuti lebar sidebar
+            document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+
             // Mengubah SVG Tombol Toggle saat collapsed/expanded
             if (isCollapsed) {
                 toggleIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>';

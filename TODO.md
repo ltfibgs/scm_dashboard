@@ -1,30 +1,17 @@
-# TODO - Progress Tracking
+# TODO - Perbaikan Sidebar Collapse Mengikuti Konten Utama
 
-## ✅ SELESAI - Perbaikan Sidebar Overlap Konten
-- Sidebar: `sticky top-0` → `fixed top-0 left-0`
-- Semua halaman ditambahkan `md:ml-64`
+## Masalah
+Saat sidebar ditutup/dibuka, konten utama (halaman) tidak menyesuaikan margin-left sehingga tidak mengikuti lebar sidebar.
 
-## ✅ SELESAI - Fitur Manajemen Pengguna
+## Langkah
+- [x] 1. Analisis penyebab: margin `md:ml-64` pada `<main>` tetap, hanya class `collapsed` pada sidebar yang berubah.
+- [x] 2. Tambah CSS `body.sidebar-collapsed main { margin-left: 4.5rem; }` pada `resources/views/partials/sidebar.blade.php`.
+- [x] 3. Ubah script toggle agar men-toggle class `sidebar-collapsed` pada `<body>`.
+- [x] 4. Tambahkan transisi margin pada `<main>` agar animasi mulus.
 
-### File baru dibuat:
-1. **`app/Http/Controllers/UserController.php`** - Controller dengan method:
-   - `index()` - Tampilkan daftar pengguna
-   - `store()` - Tambah pengguna baru (name, email, password)
-   - `update()` - Edit pengguna (name, email, password opsional)
-   - `destroy()` - Hapus pengguna (tidak bisa hapus diri sendiri)
-
-2. **`resources/views/users/index.blade.php`** - View halaman Manajemen Pengguna:
-   - Tabel daftar pengguna dengan avatar inisial
-   - Card statistik (Total, Aktif, Role)
-   - Modal Tambah Pengguna (name, email, password, confirm password)
-   - Modal Edit Pengguna (name, email, password opsional)
-   - Tombol hapus dengan konfirmasi
-   - Proteksi hapus diri sendiri
-
-### File diedit:
-3. **`routes/web.php`** - Menambahkan:
-   - `use App\Http\Controllers\UserController;`
-   - Route: `/users` (GET), POST, PUT, DELETE
-
-4. **`resources/views/partials/sidebar.blade.php`** - Menambahkan menu "Manajemen Pengguna" dengan icon SVG dan active state
+## Verifikasi
+- [x] Muat ulang halaman (hard refresh `Ctrl+F5`).
+- [x] Uji toggle sidebar di halaman dashboard dan halaman lainnya.
+- [x] Implementasi selesai: CSS, script toggle, dan transisi margin sudah diterapkan pada `resources/views/partials/sidebar.blade.php`.
+- [x] Perbaikan scroll kanan-kiri saat sidebar mengecil: `overflow-x-hidden`, teks logout disembunyikan, dan header dirapikan saat collapsed.
 

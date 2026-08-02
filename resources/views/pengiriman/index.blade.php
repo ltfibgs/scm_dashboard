@@ -222,7 +222,7 @@
 
             @forelse($pengiriman as $p)
                 <!-- Tracking Card -->
-                <div class="card-pengiriman bg-white p-md md:p-lg rounded-xl shadow-sm border-l-4 {{ $p->Status_Kirim === 'Selesai' ? 'border-emerald-500' : ($p->Status_Kirim === 'Terhambat' ? 'border-error' : 'border-primary') }} hover:shadow-md transition-shadow group">
+                <div class="card-pengiriman bg-white p-md md:p-lg rounded-xl shadow-sm border-l-4 {{ $p->Status_Kirim === 'Selesai' ? 'border-emerald-500' : ($p->Status_Kirim === 'Terhambat' ? 'border-error' : 'border-primary') }} hover:shadow-md transition-shadow group" data-status="{{ $p->Status_Kirim }}">
                     <div class="flex flex-col md:flex-row justify-between gap-md mb-lg">
                         <div class="flex gap-md">
                             <div class="w-12 h-12 rounded-lg {{ $p->Status_Kirim === 'Selesai' ? 'bg-emerald-50 text-emerald-600' : ($p->Status_Kirim === 'Terhambat' ? 'bg-error-container/20 text-error' : 'bg-surface-container text-primary') }} flex items-center justify-center">
@@ -440,12 +440,15 @@
     }
 
     function hitungRuteTSP() {
-        const elements = document.querySelectorAll('.item-tujuan');
+        // Hanya ambil tujuan dari pengiriman yang masih aktif (belum berstatus Selesai)
+        const cards = document.querySelectorAll('.card-pengiriman:not([data-status="Selesai"])');
         let rawTujuan = [];
-        
-        elements.forEach((el) => {
+
+        cards.forEach((card) => {
+            const el = card.querySelector('.item-tujuan');
+            if (!el) return;
             let val = el.innerText.trim();
-            if(val && !rawTujuan.includes(val)) {
+            if (val && !rawTujuan.includes(val)) {
                 rawTujuan.push(val);
             }
         });
